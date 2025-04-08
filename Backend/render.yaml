@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: mindmate-api
+    runtime: dotnet
+    plan: free
+    buildCommand: dotnet publish ./src/MindMate.Api/MindMate.Api.csproj -c Release
+    startCommand: chmod +x ./init-database.sh && ./init-database.sh && dotnet ./src/MindMate.Api/bin/Release/net9.0/publish/MindMate.Api.dll
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ConnectionStrings__DefaultConnection
+        value: Data Source=./mindmate.db
+      - key: Jwt__Key
+        sync: false # This will be set manually in the Render dashboard for security
+      - key: CORS__AllowedOrigins
+        value: "https://mindmate-journal.netlify.app"
